@@ -38,13 +38,14 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
-        <a href="#hero" className="flex flex-col group">
-          <span className={`text-2xl font-bold tracking-tight ${isScrolled ? "text-primary" : "text-white"}`}>
-            {lang === "ar" ? "نوافذ المستقبل" : "Nawafiz"}
-          </span>
-          <span className={`text-xs font-medium tracking-widest uppercase ${isScrolled ? "text-accent" : "text-white/80"}`}>
-            {lang === "ar" ? "للتطوير العقاري" : "Real Estate Dev"}
-          </span>
+        <a href="#hero" className="flex items-center">
+          <div className={`transition-all duration-300 ${isScrolled ? "" : "bg-white/90 rounded-lg px-2 py-1"}`}>
+            <img
+              src="/logo.png"
+              alt="نوافذ المستقبل للتطوير العقاري"
+              className="h-10 w-auto"
+            />
+          </div>
         </a>
 
         {/* Desktop Nav */}

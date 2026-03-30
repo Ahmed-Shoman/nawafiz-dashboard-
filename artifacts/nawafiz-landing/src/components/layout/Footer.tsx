@@ -39,10 +39,12 @@ export function Footer() {
 
           {/* Column 1: Logo + description */}
           <div className="lg:col-span-1">
-            <div className="mb-5">
-              <span className="text-2xl font-bold text-white block leading-tight">
-                {lang === "ar" ? "نوافذ المستقبل للتطوير العقاري" : "Nawafiz Al-Mustaqbal Real Estate Development"}
-              </span>
+            <div className="mb-5 inline-block bg-white/95 rounded-lg px-3 py-2">
+              <img
+                src="/logo.png"
+                alt="نوافذ المستقبل للتطوير العقاري"
+                className="h-12 w-auto"
+              />
             </div>
             <p className="text-white/65 text-sm leading-relaxed mb-5">
               {t("footer.desc")}
