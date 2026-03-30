@@ -146,11 +146,6 @@ export function Hero() {
         />
       </div>
 
-      {/* ── Decorative diagonal accent bar ── */}
-      <div className="absolute top-0 bottom-0 w-1 bg-accent/30 blur-[1px] z-10"
-        style={dir === "rtl" ? { right: "10%" } : { left: "10%" }}
-      />
-
       {/* ── Main Content ── */}
       <div className="relative h-full container mx-auto px-6 md:px-10 flex flex-col justify-center pt-24 z-20">
         <div className="max-w-3xl">
