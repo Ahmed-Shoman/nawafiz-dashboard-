@@ -27,9 +27,9 @@ export function Projects() {
             </h2>
           </FadeIn>
           <FadeIn direction="left">
-            <button className="px-6 py-3 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors">
+            <a href="#contact" className="px-6 py-3 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors inline-block">
               {t("projects.view_all")}
-            </button>
+            </a>
           </FadeIn>
         </div>
 
@@ -52,9 +52,9 @@ export function Projects() {
                   {project.desc}
                 </p>
                 
-                <button className="w-10 h-10 rounded-full bg-accent text-accent-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
+                <a href="#contact" className="w-10 h-10 rounded-full bg-accent text-accent-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
                   <ExternalLink className="w-5 h-5" />
-                </button>
+                </a>
               </div>
             </FadeIn>
           ))}
