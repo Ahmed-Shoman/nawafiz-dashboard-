@@ -1,0 +1,122 @@
+Got it! Here's an updated version of the prompt that includes a **hero section slider**, a **multi-language (Arabic and English)** setup, and incorporates **hover effects** and **animations**:
+
+---
+
+### Web Landing Page Design Prompt (Updated)
+
+**Objective:**
+Create a modern and professional landing page for *نوافذ المستقبل للتطوير العقاري* (Windows of the Future Real Estate Development), with a bilingual setup (Arabic and English). The design should feature smooth hover effects and animations to enhance user engagement.
+
+---
+
+#### 1. **General Style:**
+
+* **Modern and Professional**: The design should reflect a sense of trust, innovation, and reliability, in line with the company’s leadership in construction and real estate development.
+* **Clean, Minimalist Design**: Use a sophisticated color palette based on blue and green shades, which are prominent in their logo.
+* **Animations and Hover Effects**: Add subtle hover effects on buttons, images, and service cards for an interactive experience. Include smooth page transitions and fade-in effects for elements as they appear on the screen.
+
+---
+
+#### 2. **Hero Section:**
+
+* **Slider Background**:
+
+  * Implement a **slider** with multiple high-quality images related to real estate, skyscrapers, urban landscapes, and construction. Use a mix of static and dynamic images to showcase their services and vision. Each slide should last 5-7 seconds and smoothly transition.
+  * **Text Overlay**: On each slide, display a brief welcome message such as “Building the Future of Real Estate in Saudi Arabia” in both **Arabic** and **English** (ensure the text is dynamic and transitions with the slide).
+  * **Navigation Arrows and Dots**: Include arrows to navigate between slides and dots to show the current slide position.
+  * **Call to Action (CTA)**:
+
+    * **Button 1**: "Learn More" (Arabic: "مزيد من المعلومات") – directs users to the "About Us" section.
+    * **Button 2**: "View Projects" (Arabic: "عرض المشاريع") – directs users to the "Featured Projects" section.
+  * **Animations**: Use a fade-in effect for the text and CTA buttons.
+
+---
+
+#### 3. **Multi-Language Support (Arabic and English):**
+
+* **Language Toggle**: At the top right of the navigation bar, provide a language switcher button that allows users to toggle between **Arabic** and **English**. The text, headings, and content should dynamically adjust to the selected language.
+* **Content Translations**: Ensure all text on the website, including the navigation menu, service descriptions, and testimonials, is available in both languages.
+
+---
+
+#### 4. **Navigation Bar:**
+
+* **Sticky Navigation**: Ensure the navigation bar remains visible as users scroll.
+* **Navigation Items**:
+
+  * Home
+  * About Us
+  * Services
+  * Projects
+  * Contact
+  * Language Selector (for toggling between Arabic and English)
+* **Hover Effects**: On hover, change the navigation link color (from white to the company’s accent color).
+
+---
+
+#### 5. **About Us Section:**
+
+* **Text**: Describe the company’s history and mission (as seen on page 2). Use the following headings:
+
+  * "Who We Are"
+  * "Our Vision"
+  * "Our Mission"
+* **Image**: Use a professional photo of the team or a construction project.
+* **Animations**: Apply a fade-in animation for the content as the user scrolls down.
+
+---
+
+#### 6. **Services Section:**
+
+* **Service Cards**: Display the company’s core services as interactive cards. Each card should have an icon or image, a short description, and a “Learn More” link:
+
+  * Construction Projects
+  * Real Estate Development
+  * Maintenance Services
+  * Project Management
+* **Hover Effects**: On hover, increase the card size slightly, change the background color, and show more information.
+* **Animations**: Use slide-up or fade-in effects for each service card as the user scrolls.
+
+---
+
+#### 7. **Featured Projects Section:**
+
+* **Image Grid/Carousel**: Display a grid or carousel showcasing recent or ongoing projects. Include images, descriptions, and project names.
+* **Animations**: Use fade-in effects as the projects come into view. Consider adding a hover effect where the project title and a brief description slide in when the user hovers over each image.
+* **CTA**: “View All Projects” button.
+
+---
+
+#### 8. **Testimonials Section:**
+
+* **Customer Testimonials**: Add a slider or carousel showcasing positive reviews from clients or partners (as seen on page 6). Include their names and company logos (if possible).
+* **Hover Effects**: Show a brief quote or review when users hover over the customer’s image.
+* **Animations**: Use a sliding animation for testimonials as they transition.
+
+---
+
+#### 9. **Contact Us Section:**
+
+* **Contact Information**: Display phone numbers, email, and address from page 10.
+* **Contact Form**: A simple form for users to send inquiries. Fields: Name, Email, Message.
+* **Map**: Embed an interactive map to show the company’s location in Medina.
+* **Hover Effects**: On form inputs, change the border color on focus.
+
+---
+
+#### 10. **Footer Section:**
+
+* **Quick Links**: Add links to the social media pages.
+* **Copyright Information**: "© 2026 نوافذ المستقبل للتطوير العقاري – All Rights Reserved"
+
+---
+
+#### 11. **Responsive Design:**
+
+* **Mobile-Friendly**: Ensure the website adapts seamlessly to different screen sizes.
+* **Animations**: On mobile devices, reduce the animation duration and frequency to improve loading times.
+* **Navigation**: Implement a hamburger menu for mobile devices.
+
+---
+
+This updated prompt includes a **slider hero section**, **multi-language support**, and adds **hover effects** and **animations** to ensure the site is interactive, visually engaging, and user-friendly across devices.

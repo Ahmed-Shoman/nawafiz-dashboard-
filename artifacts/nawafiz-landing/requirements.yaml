@@ -1,0 +1,26 @@
+packages:
+  "framer-motion": "For page transitions, scroll-triggered animations, and the hero slider"
+  "lucide-react": "For UI icons across the landing page"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes without style conflicts"
+
+images:
+  - path: "artifacts/nawafiz-landing/public/images/hero-1.png"
+    description: "Abstract modern luxury architectural building glass facade reflecting clear sky, highly detailed, photorealistic, premium feel, deep teal and subtle gold lighting"
+    aspect_ratio: "16:9"
+  - path: "artifacts/nawafiz-landing/public/images/hero-2.png"
+    description: "Luxury real estate development exterior at golden hour, warm lighting, hyperrealistic, modern arabian architecture"
+    aspect_ratio: "16:9"
+  - path: "artifacts/nawafiz-landing/public/images/hero-3.png"
+    description: "Modern interior design luxury living room, bright, spacious, high-end materials, saudi arabian modern style"
+    aspect_ratio: "16:9"
+  - path: "artifacts/nawafiz-landing/public/images/hero-4.png"
+    description: "Abstract geometric luxury background in deep teal and gold colors, elegant architectural lines"
+    aspect_ratio: "16:9"
+  - path: "artifacts/nawafiz-landing/public/images/about-bg.png"
+    description: "Elegant contemporary saudi real estate development model, abstract, shallow depth of field, premium look"
+    aspect_ratio: "4:3"
+
+notes:
+  - "The app relies heavily on RTL support using CSS logical properties and HTML dir attributes."
+  - "A LanguageContext provides seamless toggling between Arabic (default) and English."
