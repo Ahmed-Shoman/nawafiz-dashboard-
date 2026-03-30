@@ -85,11 +85,33 @@ export const translations = {
     "contact.info.phone": "+966 14 123 4567",
     "contact.info.email": "info@nawafiz-dev.sa",
 
+    // Stats
+    "stats.title": "Why Choose Nawafiz Al-Mustaqbal?",
+    "stats.subtitle": "With a team of engineers and construction experts, we deliver our services to the highest standards of quality and professionalism, building a safe and sustainable future with you.",
+    "stats.projects": "Completed Projects",
+    "stats.experience": "Years of Experience",
+    "stats.clients": "Satisfied Clients",
+    "stats.awards": "Excellence Awards",
+
     // Footer
-    "footer.desc": "Pioneering the future of urban living in the Kingdom of Saudi Arabia with excellence, innovation, and trust.",
+    "footer.desc": "Your ideal partner for achieving your architectural ambitions. We build the future with innovative designs and superior quality execution.",
+    "footer.address": "Medina, Saudi Arabia",
     "footer.links": "Quick Links",
+    "footer.services": "Our Services",
     "footer.contact": "Contact Info",
-    "footer.rights": "© 2026 Nawafiz Al-Mustaqbal Real Estate Development. All Rights Reserved."
+    "footer.rights": "© 2026 Nawafiz Al-Mustaqbal Real Estate Development – Medina. All Rights Reserved.",
+    "footer.svc.general": "General Contracting",
+    "footer.svc.arch": "Architectural Design",
+    "footer.svc.realestate": "Real Estate Management",
+    "footer.svc.consulting": "Engineering Consulting",
+    "footer.svc.maintenance": "Operations, Maintenance & Facility Management",
+    "footer.hours.title": "Working Hours",
+    "footer.hours.sun_thu": "Sunday – Thursday",
+    "footer.hours.sun_thu_time": "8:00 AM – 5:00 PM",
+    "footer.hours.sat": "Saturday",
+    "footer.hours.sat_time": "9:00 AM – 2:00 PM",
+    "footer.hours.fri": "Friday",
+    "footer.hours.fri_time": "Closed"
   },
   ar: {
     // Navigation
@@ -175,10 +197,32 @@ export const translations = {
     "contact.info.phone": "+966 14 123 4567",
     "contact.info.email": "info@nawafiz-dev.sa",
 
+    // Stats
+    "stats.title": "لماذا تختار نوافذ المستقبل؟",
+    "stats.subtitle": "مع فريق من المهندسين والخبراء في البناء، نقدم خدماتنا بأعلى معايير الجودة والاحترافية، لنبني معك مستقبلاً آمناً ومستداماً.",
+    "stats.projects": "مشروع منجز",
+    "stats.experience": "سنة خبرة",
+    "stats.clients": "عميل راضٍ",
+    "stats.awards": "جائزة تميز",
+
     // Footer
-    "footer.desc": "ريادة مستقبل المعيشة الحضرية في المملكة العربية السعودية بتميز وابتكار وثقة.",
+    "footer.desc": "شريكك الأمثل لتحقيق طموحاتك المعمارية. نبني المستقبل بتصاميم مبتكرة وتنفيذ فائق الجودة.",
+    "footer.address": "المدينة المنورة، المملكة العربية السعودية",
     "footer.links": "روابط سريعة",
+    "footer.services": "خدماتنا",
     "footer.contact": "معلومات الاتصال",
-    "footer.rights": "© 2026 نوافذ المستقبل للتطوير العقاري. جميع الحقوق محفوظة."
+    "footer.rights": "جميع الحقوق محفوظة © 2026 لشركة نوافذ المستقبل للتطوير العقاري - المدينة المنورة.",
+    "footer.svc.general": "المقاولات العامة",
+    "footer.svc.arch": "التصميم المعماري",
+    "footer.svc.realestate": "إدارة العقارات",
+    "footer.svc.consulting": "الاستشارات الهندسية",
+    "footer.svc.maintenance": "التشغيل والصيانة وإدارة المرافق",
+    "footer.hours.title": "ساعات العمل",
+    "footer.hours.sun_thu": "الأحد - الخميس",
+    "footer.hours.sun_thu_time": "8:00 ص - 5:00 م",
+    "footer.hours.sat": "السبت",
+    "footer.hours.sat_time": "9:00 ص - 2:00 م",
+    "footer.hours.fri": "الجمعة",
+    "footer.hours.fri_time": "مغلق"
   }
 };
