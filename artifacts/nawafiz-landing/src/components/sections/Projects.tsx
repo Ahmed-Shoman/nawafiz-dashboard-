@@ -1,11 +1,18 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useApi, API_BASE_URL } from "@/contexts/ApiContext";
 import { FadeIn } from "@/components/ui/fade-in";
 import { ExternalLink } from "lucide-react";
 
 export function Projects() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { projects, sections } = useApi();
 
-  const projects = [
+  const projectsSection = sections?.find((s) => s.key === 'projects')?.content;
+
+  const badge = lang === 'ar' ? (projectsSection?.badge_ar || t("projects.badge")) : (projectsSection?.badge_en || t("projects.badge"));
+  const title = lang === 'ar' ? (projectsSection?.title_ar || t("projects.title")) : (projectsSection?.title_en || t("projects.title"));
+
+  const defaultProjects = [
     { title: t("projects.1.title"), desc: t("projects.1.desc"), img: `${import.meta.env.BASE_URL}images/hero-2.png` },
     { title: t("projects.2.title"), desc: t("projects.2.desc"), img: `${import.meta.env.BASE_URL}images/hero-1.png` },
     { title: t("projects.3.title"), desc: t("projects.3.desc"), img: `${import.meta.env.BASE_URL}images/hero-3.png` },
@@ -14,16 +21,25 @@ export function Projects() {
     { title: t("projects.6.title"), desc: t("projects.6.desc"), img: `${import.meta.env.BASE_URL}images/hero-2.png` },
   ];
 
+  const fixImg = (url: string) =>
+    url ? (url.startsWith('http') ? url : `${API_BASE_URL}${url}`) : `${import.meta.env.BASE_URL}images/hero-2.png`;
+
+  const displayedProjects = projects?.length > 0 ? projects.map((p: any) => ({
+    title: lang === 'ar' ? p.title_ar : p.title_en,
+    desc: lang === 'ar' ? p.desc_ar : p.desc_en,
+    img: fixImg(p.image)
+  })) : defaultProjects;
+
   return (
     <section id="projects" className="py-24 bg-background">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <FadeIn direction="right">
             <span className="text-accent font-bold tracking-wider uppercase text-sm mb-2 block">
-              {t("projects.badge")}
+              {badge}
             </span>
             <h2 className="text-3xl md:text-5xl font-bold text-foreground">
-              {t("projects.title")}
+              {title}
             </h2>
           </FadeIn>
           <FadeIn direction="left">
@@ -34,7 +50,7 @@ export function Projects() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, idx) => (
+          {displayedProjects.map((project: any, idx: number) => (
             <FadeIn key={idx} delay={idx * 0.1} className="group relative h-80 rounded-3xl overflow-hidden shadow-lg">
               {/* Background Image */}
               <div 

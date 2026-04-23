@@ -1,43 +1,41 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useApi, API_BASE_URL } from "@/contexts/ApiContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import { Link } from "wouter";
 
 const SLIDE_DURATION = 7000;
 
 export function Hero() {
   const { t, dir, lang } = useLanguage();
+  const { sections, loading } = useApi();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progress, setProgress] = useState(0);
   const [direction, setDirection] = useState(1);
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(Date.now());
 
-  const slides = [
+  const heroData = sections?.find((s) => s.key === 'hero')?.content;
+
+  const defaultSlides = [
     {
       image: `${import.meta.env.BASE_URL}images/hero-1.png`,
-      titleKey: "hero.slide1.title" as const,
-      subtitleKey: "hero.subtitle" as const,
-    },
-    {
-      image: `${import.meta.env.BASE_URL}images/hero-2.png`,
-      titleKey: "hero.slide2.title" as const,
-      subtitleKey: "hero.subtitle" as const,
-    },
-    {
-      image: `${import.meta.env.BASE_URL}images/hero-3.png`,
-      titleKey: "hero.slide3.title" as const,
-      subtitleKey: "hero.subtitle" as const,
-    },
-    {
-      image: `${import.meta.env.BASE_URL}images/hero-4.png`,
-      titleKey: "hero.slide4.title" as const,
-      subtitleKey: "hero.subtitle" as const,
-    },
+      title_ar: "بناء المستقبل اليوم",
+      title_en: "Building the Future Today"
+    }
   ];
 
-  const goTo = useCallback((idx: number, dir: number) => {
-    setDirection(dir);
+  // Fix image URLs: if relative /storage/ path, prepend API_BASE_URL
+  const fixImageUrl = (url: string) =>
+    url ? (url.startsWith('http') ? url : `${API_BASE_URL}${url}`) : url;
+
+  const slides = heroData?.slides?.length > 0
+    ? heroData.slides.map((s: any) => ({ ...s, image: fixImageUrl(s.image) }))
+    : defaultSlides;
+
+  const goTo = useCallback((idx: number, d: number) => {
+    setDirection(d);
     setCurrentSlide(idx);
     setProgress(0);
     startTimeRef.current = Date.now();
@@ -92,7 +90,7 @@ export function Hero() {
     },
   };
 
-  const wordVariant = {
+  const wordVariant: any = {
     hidden: { opacity: 0, y: 24, filter: "blur(4px)" },
     show: {
       opacity: 1,
@@ -102,8 +100,14 @@ export function Hero() {
     },
   };
 
-  const title = t(slides[currentSlide].titleKey);
-  const words = title.split(" ");
+  const currentSlideData = slides[currentSlide] || slides[0];
+  const title = lang === 'ar' ? currentSlideData?.title_ar : currentSlideData?.title_en;
+  const words = title ? title.split(" ") : [];
+
+  // Dynamic subtitle & CTA from API
+  const subtitle = lang === 'ar' ? (heroData?.subtitle_ar || t("hero.subtitle")) : (heroData?.subtitle_en || t("hero.subtitle"));
+  const ctaMore = lang === 'ar' ? (heroData?.cta_more_ar || t("hero.cta.more")) : (heroData?.cta_more_en || t("hero.cta.more"));
+  const ctaProjects = lang === 'ar' ? (heroData?.cta_projects_ar || t("hero.cta.projects")) : (heroData?.cta_projects_en || t("hero.cta.projects"));
 
   const slideNum = String(currentSlide + 1).padStart(2, "0");
   const totalNum = String(slides.length).padStart(2, "0");
@@ -177,7 +181,7 @@ export function Hero() {
               exit={{ opacity: 0, transition: { duration: 0.25 } }}
               className="text-4xl md:text-6xl lg:text-[72px] font-bold text-white leading-[1.12] mb-7 tracking-tight"
             >
-              {words.map((word, i) => (
+              {words.map((word: string, i: number) => (
                 <motion.span key={i} variants={wordVariant} className="inline-block me-[0.25em]">
                   {word}
                 </motion.span>
@@ -195,7 +199,7 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.55 }}
               className="text-base md:text-lg text-white/75 mb-10 max-w-xl leading-relaxed"
             >
-              {t("hero.subtitle")}
+              {subtitle}
             </motion.p>
           </AnimatePresence>
 
@@ -207,17 +211,19 @@ export function Hero() {
             className="flex flex-wrap gap-4"
           >
             <a
-              href="#about"
+              href="https://wa.me/0537502035"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group relative px-8 py-4 bg-accent text-accent-foreground font-bold rounded-xl overflow-hidden shadow-xl shadow-accent/25 hover:shadow-accent/40 transition-shadow"
             >
-              <span className="relative z-10">{t("hero.cta.more")}</span>
+              <span className="relative z-10">{ctaMore}</span>
               <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-300" />
             </a>
             <a
               href="#projects"
               className="group px-8 py-4 bg-white/8 text-white font-bold rounded-xl backdrop-blur-md border border-white/20 hover:bg-white/15 hover:border-white/35 transition-all duration-300"
             >
-              {t("hero.cta.projects")}
+              {ctaProjects}
             </a>
           </motion.div>
         </div>
@@ -239,7 +245,7 @@ export function Hero() {
 
           {/* Dot indicators with animated progress ring */}
           <div className="flex items-center gap-2.5">
-            {slides.map((_, idx) => (
+            {slides.map((_: any, idx: number) => (
               <button
                 key={idx}
                 onClick={() => goTo(idx, idx > currentSlide ? 1 : -1)}
@@ -300,7 +306,7 @@ export function Hero() {
       <div
         className={`absolute top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col items-center gap-3 ${dir === "rtl" ? "left-6" : "right-6"}`}
       >
-        {slides.map((_, idx) => (
+        {slides.map((_: any, idx: number) => (
           <button
             key={idx}
             onClick={() => goTo(idx, idx > currentSlide ? 1 : -1)}

@@ -5,6 +5,7 @@ import { About } from "@/components/sections/About";
 import { Services } from "@/components/sections/Services";
 import { Projects } from "@/components/sections/Projects";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { Blogs } from "@/components/sections/Blogs";
 import { Contact } from "@/components/sections/Contact";
 import { Stats } from "@/components/sections/Stats";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
@@ -20,6 +21,7 @@ export default function Home() {
         <Services />
         <Projects />
         <Testimonials />
+        <Blogs />
         <Contact />
       </main>
       <Footer />

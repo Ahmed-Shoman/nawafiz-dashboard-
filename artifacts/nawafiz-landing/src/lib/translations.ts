@@ -7,6 +7,7 @@ export const translations = {
     "nav.about": "About Us",
     "nav.services": "Services",
     "nav.projects": "Projects",
+    "nav.blogs": "Blog",
     "nav.contact": "Contact",
     "nav.language": "عر",
     
@@ -78,6 +79,7 @@ export const translations = {
     "contact.subtitle": "Have a question or interested in our projects? We'd love to hear from you.",
     "contact.form.name": "Full Name",
     "contact.form.email": "Email Address",
+    "contact.form.phone": "Phone Number",
     "contact.form.message": "Your Message",
     "contact.form.submit": "Send Message",
     "contact.form.sending": "Sending...",
@@ -86,7 +88,7 @@ export const translations = {
     "contact.info.email_label": "Email",
     "contact.info.whatsapp_label": "WhatsApp",
     "contact.info.address": "King Abdullah Road, Medina, Saudi Arabia",
-    "contact.info.phone": "+966 14 123 4567",
+    "contact.info.phone": "0537502035",
     "contact.info.email": "info@nawafiz-dev.sa",
 
     // Stats
@@ -115,7 +117,23 @@ export const translations = {
     "footer.hours.sat": "Saturday",
     "footer.hours.sat_time": "9:00 AM – 2:00 PM",
     "footer.hours.fri": "Friday",
-    "footer.hours.fri_time": "Closed"
+    "footer.hours.fri_time": "Closed",
+
+    // Blogs
+    "blogs.badge": "Our Blog",
+    "blogs.title": "Latest Insights & News",
+    "blogs.view_all": "View All Articles",
+    "blogs.read_more": "Read More",
+    "blogs.back_home": "Back to Home",
+    "blogs.1.title": "The Future of Real Estate in Saudi Arabia",
+    "blogs.1.excerpt": "Explore how Vision 2030 is reshaping the real estate market with innovative and sustainable practices.",
+    "blogs.1.content": "The Saudi real estate sector is witnessing an unprecedented boom, driven by the ambitious goals of Vision 2030. Key developments focus on sustainability, smart cities, and enhanced living standards. High-rise buildings are integrating state-of-the-art green technologies to reduce carbon footprints. Residential communities are designed with holistic well-being in mind, offering modern amenities, lush green spaces, and seamless connectivity. As the nation diversifies its economy, real estate remains a fundamental pillar of growth and development.",
+    "blogs.2.title": "Sustainable Urban Development",
+    "blogs.2.excerpt": "Why modern communities require eco-friendly designs and green technological integration.",
+    "blogs.2.content": "Sustainability is no longer a luxury; it is a necessity for modern urban living. The integration of renewable energy sources, efficient water management systems, and smart waste disposal methods is revolutionizing cityscapes. Developers are focusing on creating self-sufficient ecosystems where residents can live, work, and thrive without compromising the environment. Eco-friendly building materials and intelligent climate control systems are becoming industry standards, ensuring that progress aligns with environmental preservation.",
+    "blogs.3.title": "Smart Homes in Modern Medina",
+    "blogs.3.excerpt": "A deep dive into how smart automated technologies are elevating residential capabilities.",
+    "blogs.3.content": "Medina is embracing the future with the rise of smart homes that offer unparalleled convenience, security, and energy efficiency. From automated lighting and climate control to advanced security systems controllable via smartphones, technology is seamlessly integrated into daily life. These smart solutions not only elevate the living experience but also contribute to significant energy savings. The fusion of traditional values with futuristic technology is creating a unique and highly desirable lifestyle in the heart of Medina."
   },
   ar: {
     // Navigation
@@ -123,8 +141,10 @@ export const translations = {
     "nav.about": "من نحن",
     "nav.services": "خدماتنا",
     "nav.projects": "مشاريعنا",
+    "nav.blogs": "المدونة",
     "nav.contact": "اتصل بنا",
     "nav.language": "EN",
+
     
     // Hero
     "hero.slide1.title": "نبني مستقبل العقارات في المملكة العربية السعودية",
@@ -132,7 +152,7 @@ export const translations = {
     "hero.slide3.title": "رؤيتك، خبرتنا",
     "hero.slide4.title": "نشكّل المشهد العمراني",
     "hero.subtitle": "نوافذ المستقبل للتطوير العقاري تقدم مساحات معيشة وعمل فاخرة ومستدامة ومبتكرة.",
-    "hero.cta.more": "مزيد من المعلومات",
+    "hero.cta.more": "تواصل معنا ",
     "hero.cta.projects": "عرض المشاريع",
 
     // About
@@ -194,6 +214,7 @@ export const translations = {
     "contact.subtitle": "هل لديك سؤال أو مهتم بمشاريعنا؟ يسعدنا أن نسمع منك.",
     "contact.form.name": "الاسم الكامل",
     "contact.form.email": "البريد الإلكتروني",
+    "contact.form.phone": "رقم الهاتف",
     "contact.form.message": "رسالتك",
     "contact.form.submit": "إرسال الرسالة",
     "contact.form.sending": "جاري الإرسال...",
@@ -202,8 +223,9 @@ export const translations = {
     "contact.info.email_label": "البريد الإلكتروني",
     "contact.info.whatsapp_label": "واتساب",
     "contact.info.address": "طريق الملك عبدالله، المدينة المنورة، المملكة العربية السعودية",
-    "contact.info.phone": "+966 14 123 4567",
+    "contact.info.phone": "0537502035",
     "contact.info.email": "info@nawafiz-dev.sa",
+    "phone": "رقم الهاتف",
 
     // Stats
     "stats.title": "لماذا تختار نوافذ المستقبل؟",
@@ -231,6 +253,22 @@ export const translations = {
     "footer.hours.sat": "السبت",
     "footer.hours.sat_time": "9:00 ص - 2:00 م",
     "footer.hours.fri": "الجمعة",
-    "footer.hours.fri_time": "مغلق"
+    "footer.hours.fri_time": "مغلق",
+
+    // Blogs
+    "blogs.badge": "مدونتنا",
+    "blogs.title": "أحدث المقالات والأخبار",
+    "blogs.view_all": "عرض جميع المقالات",
+    "blogs.read_more": "اقرأ المزيد",
+    "blogs.back_home": "العودة للرئيسية",
+    "blogs.1.title": "مستقبل العقارات في المملكة العربية السعودية",
+    "blogs.1.excerpt": "اكتشف كيف تعيد رؤية 2030 تشكيل سوق العقارات بممارسات مبتكرة ومستدامة.",
+    "blogs.1.content": "يشهد قطاع العقارات السعودي ازدهارًا غير مسبوق، مدفوعًا بالأهداف الطموحة لرؤية 2030. وتركز التطورات الرئيسية على الاستدامة والمدن الذكية وتحسين مستويات المعيشة. تدمج المباني الشاهقة تقنيات خضراء حديثة لتقليل البصمة الكربونية. تم تصميم المجتمعات السكنية مع وضع الرفاهية الشاملة في الاعتبار، وتقدم وسائل الراحة الحديثة والمساحات الخضراء المورقة والاتصال السلس. ومع تنويع الأمة لاقتصادها، تظل العقارات ركيزة أساسية للنمو والتطوير.",
+    "blogs.2.title": "التنمية الحضرية المستدامة",
+    "blogs.2.excerpt": "لماذا تتطلب المجتمعات الحديثة تصميمات صديقة للبيئة وتكاملًا تكنولوجيًا أخضر.",
+    "blogs.2.content": "لم تعد الاستدامة رفاهية؛ إنها ضرورة للحياة الحضرية الحديثة. إن دمج مصادر الطاقة المتجددة وأنظمة إدارة المياه الفعالة وطرق التخلص من النفايات الذكية يُحدث ثورة في مناظر المدينة. يركز المطورون على إنشاء أنظمة بيئية مكتفية ذاتيًا حيث يمكن للمقيمين العيش والعمل والازدهار دون المساس بالبيئة. أصبحت مواد البناء الصديقة للبيئة وأنظمة التحكم في المناخ الذكية معايير صناعية، مما يضمن توافق التقدم مع الحفاظ على البيئة.",
+    "blogs.3.title": "المنازل الذكية في المدينة المنورة الحديثة",
+    "blogs.3.excerpt": "نظرة عميقة حول كيفية ارتقاء التقنيات الآلية الذكية بالقدرات السكنية.",
+    "blogs.3.content": "تحتضن المدينة المنورة المستقبل مع صعود المنازل الذكية التي توفر راحة وأمانًا وكفاءة في استخدام الطاقة لا مثيل لها. من الإضاءة الآلية والتحكم في المناخ إلى أنظمة الأمان المتقدمة التي يمكن التحكم فيها عبر الهواتف الذكية، يتم دمج التكنولوجيا بسلاسة في الحياة اليومية. لا ترتقي هذه الحلول الذكية بتجربة المعيشة فحسب، بل تساهم أيضًا في توفير كبير في الطاقة. إن دمج القيم التقليدية مع التكنولوجيا المستقبلية يخلق أسلوب حياة فريدًا ومرغوبًا فيه بشدة في قلب المدينة المنورة."
   }
 };

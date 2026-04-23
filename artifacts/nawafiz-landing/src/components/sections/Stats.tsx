@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useApi } from "@/contexts/ApiContext";
 
 function CountUp({ target, suffix = "+" }: { target: number; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -41,6 +42,7 @@ function CountUp({ target, suffix = "+" }: { target: number; suffix?: string }) 
 
 export function Stats() {
   const { t, lang } = useLanguage();
+  const { sections } = useApi();
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -53,12 +55,28 @@ export function Stats() {
     return () => observer.disconnect();
   }, []);
 
-  const stats = [
+  const statsSection = sections?.find((s) => s.key === 'stats')?.content;
+
+  const defaultStats = [
     { value: 500, suffix: "+", labelKey: "stats.projects" },
     { value: 15,  suffix: "+", labelKey: "stats.experience" },
     { value: 1000, suffix: "+", labelKey: "stats.clients" },
     { value: 50,  suffix: "+", labelKey: "stats.awards" },
   ];
+
+  // If the API returned stats items, use them; otherwise fall back to defaults
+  const stats = statsSection?.items?.length > 0 ? statsSection.items.map((item: any) => ({
+    value: Number(item.value) || 0,
+    suffix: item.suffix || "+",
+    label: lang === 'ar' ? item.label_ar : item.label_en,
+  })) : defaultStats.map(s => ({
+    value: s.value,
+    suffix: s.suffix,
+    label: t(s.labelKey as any),
+  }));
+
+  const title = lang === 'ar' ? (statsSection?.title_ar || t("stats.title")) : (statsSection?.title_en || t("stats.title"));
+  const subtitle = lang === 'ar' ? (statsSection?.subtitle_ar || t("stats.subtitle")) : (statsSection?.subtitle_en || t("stats.subtitle"));
 
   return (
     <section className="py-24 bg-primary relative overflow-hidden">
@@ -75,15 +93,15 @@ export function Stats() {
           className={`text-center mb-16 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
-            {t("stats.title")}
+            {title}
           </h2>
           <p className="text-primary-foreground/70 max-w-2xl mx-auto text-lg leading-relaxed">
-            {t("stats.subtitle")}
+            {subtitle}
           </p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, i) => (
+          {stats.map((stat: any, i: number) => (
             <div
               key={i}
               className={`text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
@@ -98,7 +116,7 @@ export function Stats() {
                   )}
                 </span>
                 <span className="text-primary-foreground/80 text-sm md:text-base font-medium text-center">
-                  {t(stat.labelKey as any)}
+                  {stat.label}
                 </span>
               </div>
             </div>

@@ -1,21 +1,37 @@
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useApi } from "@/contexts/ApiContext";
 import { FadeIn } from "@/components/ui/fade-in";
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Testimonials() {
-  const { t, dir } = useLanguage();
+  const { t, dir, lang } = useLanguage();
+  const { testimonials, sections } = useApi();
   const [active, setActive] = useState(0);
 
-  const testimonials = [
+  const testSection = sections?.find((s) => s.key === 'testimonials')?.content;
+  
+  const badge = lang === 'ar' ? (testSection?.badge_ar || t("testimonials.badge")) : (testSection?.badge_en || t("testimonials.badge"));
+  const title = lang === 'ar' ? (testSection?.title_ar || t("testimonials.title")) : (testSection?.title_en || t("testimonials.title"));
+
+  const defaultTestimonials = [
     { text: t("testimonials.1.text"), name: t("testimonials.1.name"), role: t("testimonials.1.role") },
     { text: t("testimonials.2.text"), name: t("testimonials.2.name"), role: t("testimonials.2.role") },
     { text: t("testimonials.3.text"), name: t("testimonials.3.name"), role: t("testimonials.3.role") },
   ];
 
-  const next = () => setActive((p) => (p + 1) % testimonials.length);
-  const prev = () => setActive((p) => (p - 1 + testimonials.length) % testimonials.length);
+  const displayedTestimonials = testimonials?.length > 0 ? testimonials.map((tItem: any) => ({
+    text: lang === 'ar' ? tItem.text_ar : tItem.text_en,
+    name: lang === 'ar' ? tItem.name_ar : tItem.name_en,
+    role: lang === 'ar' ? tItem.role_ar : tItem.role_en,
+  })) : defaultTestimonials;
+
+  const next = () => setActive((p) => (p + 1) % displayedTestimonials.length);
+  const prev = () => setActive((p) => (p - 1 + displayedTestimonials.length) % displayedTestimonials.length);
+
+  // Guard against empty testimonials
+  if (displayedTestimonials.length === 0) return null;
 
   return (
     <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
@@ -26,10 +42,10 @@ export function Testimonials() {
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <FadeIn className="text-center mb-16">
           <span className="text-accent font-bold tracking-wider uppercase text-sm mb-2 block">
-            {t("testimonials.badge")}
+            {badge}
           </span>
           <h2 className="text-3xl md:text-5xl font-bold">
-            {t("testimonials.title")}
+            {title}
           </h2>
         </FadeIn>
 
@@ -46,11 +62,11 @@ export function Testimonials() {
               >
                 <Quote className="w-16 h-16 text-accent/30 mx-auto mb-8 rotate-180" />
                 <p className="text-2xl md:text-3xl font-medium leading-relaxed mb-10">
-                  "{testimonials[active].text}"
+                  "{displayedTestimonials[active].text}"
                 </p>
                 <div>
-                  <h4 className="text-xl font-bold text-accent mb-1">{testimonials[active].name}</h4>
-                  <p className="text-primary-foreground/70">{testimonials[active].role}</p>
+                  <h4 className="text-xl font-bold text-accent mb-1">{displayedTestimonials[active].name}</h4>
+                  <p className="text-primary-foreground/70">{displayedTestimonials[active].role}</p>
                 </div>
               </motion.div>
             </AnimatePresence>

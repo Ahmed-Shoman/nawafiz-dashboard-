@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -6,7 +7,6 @@ import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { FadeIn } from "@/components/ui/fade-in";
 import { MapPin, Phone, Mail, Send, Navigation } from "lucide-react";
 
-const PHONE = "0537502035";
 const WHATSAPP = "966537502035";
 const LAT = 24.38741;
 const LNG = 39.66397;
@@ -14,17 +14,33 @@ const MAPS_LINK = "https://maps.app.goo.gl/JMkrQQRZEFpgtWQN8";
 
 export default function ContactPage() {
   const { t, lang, dir } = useLanguage();
+  const [, setLocation] = useLocation();
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
+
+    const form = e.target as HTMLFormElement;
+    const name = (form.elements.namedItem("name") as HTMLInputElement)?.value || "";
+    const email = (form.elements.namedItem("email") as HTMLInputElement)?.value || "";
+    
+    // ✅ 1. ابعت الـ Event لـ GTM (من غير ما نستناه يرد علينا)
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "form_submit",
+      form_name: "contact_page_form",
+      user_name: name,
+      user_email: email,
+    });
+
+    // ✅ 2. توجيه إجباري ومضمون 100% بعد نصف ثانية
     setTimeout(() => {
       setSending(false);
       setSent(true);
-      setTimeout(() => setSent(false), 3000);
-    }, 1500);
+      setLocation("/thank-you"); // هينقلك للصفحة فوراً هنا
+    }, 500);
   };
 
   return (
@@ -54,26 +70,10 @@ export default function ContactPage() {
       {/* Contact Cards Row */}
       <section className="py-16 bg-muted/20">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto">
 
             {/* Phone */}
-            <FadeIn delay={0}>
-              <a
-                href={`tel:${PHONE}`}
-                className="group flex flex-col items-center text-center gap-4 p-8 bg-card border border-border rounded-2xl hover:border-primary/30 hover:shadow-lg transition-all duration-300"
-              >
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground text-primary transition-all duration-300">
-                  <Phone className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                    {t("contact.info.phone_label")}
-                  </p>
-                  <p className="font-bold text-foreground text-lg" dir="ltr">{PHONE}</p>
-                </div>
-              </a>
-            </FadeIn>
-
+            
             {/* WhatsApp */}
             <FadeIn delay={0.1}>
               <a
@@ -91,7 +91,7 @@ export default function ContactPage() {
                   <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
                     {t("contact.info.whatsapp_label")}
                   </p>
-                  <p className="font-bold text-foreground text-lg" dir="ltr">{PHONE}</p>
+                
                 </div>
               </a>
             </FadeIn>
@@ -132,9 +132,9 @@ export default function ContactPage() {
                   <p className="font-bold text-foreground text-sm">
                     {lang === "ar" ? "المدينة المنورة، المملكة العربية السعودية" : "Medina, Saudi Arabia"}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1 font-mono" dir="ltr">
+                 {/* <p className="text-xs text-muted-foreground mt-1 font-mono" dir="ltr">
                     24°23'14.7"N 39°39'50.3"E
-                  </p>
+                  </p>  */}
                 </div>
               </a>
             </FadeIn>
@@ -189,6 +189,7 @@ export default function ContactPage() {
                     </label>
                     <input
                       type="text"
+                      name="name"
                       required
                       className="w-full px-5 py-4 rounded-xl bg-background border-2 border-border focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
                     />
@@ -199,6 +200,7 @@ export default function ContactPage() {
                     </label>
                     <input
                       type="email"
+                      name="email"
                       required
                       className="w-full px-5 py-4 rounded-xl bg-background border-2 border-border focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
                     />
@@ -208,6 +210,7 @@ export default function ContactPage() {
                       {t("contact.form.message")}
                     </label>
                     <textarea
+                      name="message"
                       required
                       rows={5}
                       className="w-full px-5 py-4 rounded-xl bg-background border-2 border-border focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-none"

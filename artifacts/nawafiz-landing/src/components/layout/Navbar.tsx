@@ -1,14 +1,28 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useApi } from "@/contexts/ApiContext";
 import { Menu, X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 
 export function Navbar() {
   const { lang, setLang, t, dir } = useLanguage();
+  const { settings } = useApi();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
+
+  const getSetting = (key: string) => {
+    if (Array.isArray(settings)) {
+      const found = settings.find((s: any) => s.key === key);
+      return found?.value || null;
+    }
+    if (settings && typeof settings === 'object' && settings[key]) {
+      return settings[key];
+    }
+    return null;
+  };
+  const logoUrl = getSetting('logo') || "/logo.png";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +43,7 @@ export function Navbar() {
     { key: "nav.about", href: isHome ? "#about" : "/#about" },
     { key: "nav.services", href: "/services" },
     { key: "nav.projects", href: isHome ? "#projects" : "/#projects" },
+    { key: "nav.blogs", href: isHome ? "#blogs" : "/#blogs" },
     { key: "nav.contact", href: "/contact" },
   ] as const;
 
@@ -45,9 +60,9 @@ export function Navbar() {
         <a href="/" className="flex items-center">
           <div className={`transition-all duration-300 ${isScrolled ? "" : "bg-white/90 rounded-lg px-2 py-1"}`}>
             <img
-              src="/logo.png"
+              src={logoUrl}
               alt="نوافذ المستقبل للتطوير العقاري"
-              className="h-10 w-auto"
+              className="h-12 w-auto"
             />
           </div>
         </a>

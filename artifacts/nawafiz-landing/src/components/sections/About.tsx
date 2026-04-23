@@ -1,9 +1,29 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useApi, API_BASE_URL } from "@/contexts/ApiContext";
 import { FadeIn } from "@/components/ui/fade-in";
 import { Building, Target, Compass } from "lucide-react";
 
 export function About() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { sections } = useApi();
+
+  const aboutSection = sections?.find((s) => s.key === 'about')?.content;
+
+  const title = lang === 'ar' ? (aboutSection?.title_ar || t("about.title")) : (aboutSection?.title_en || t("about.title"));
+  const badge = lang === 'ar' ? (aboutSection?.badge_ar || t("about.badge")) : (aboutSection?.badge_en || t("about.badge"));
+  const desc1 = lang === 'ar' ? (aboutSection?.desc1_ar || t("about.description1")) : (aboutSection?.desc1_en || t("about.description1"));
+  const desc2 = lang === 'ar' ? (aboutSection?.desc2_ar || t("about.description2")) : (aboutSection?.desc2_en || t("about.description2"));
+  
+  const visionTitle = lang === 'ar' ? (aboutSection?.vision_title_ar || t("about.vision.title")) : (aboutSection?.vision_title_en || t("about.vision.title"));
+  const visionDesc = lang === 'ar' ? (aboutSection?.vision_desc_ar || t("about.vision.desc")) : (aboutSection?.vision_desc_en || t("about.vision.desc"));
+  
+  const missionTitle = lang === 'ar' ? (aboutSection?.mission_title_ar || t("about.mission.title")) : (aboutSection?.mission_title_en || t("about.mission.title"));
+  const missionDesc = lang === 'ar' ? (aboutSection?.mission_desc_ar || t("about.mission.desc")) : (aboutSection?.mission_desc_en || t("about.mission.desc"));
+
+  const rawImage = aboutSection?.image;
+  const image = rawImage
+    ? (rawImage.startsWith('http') ? rawImage : `${API_BASE_URL}${rawImage}`)
+    : `${import.meta.env.BASE_URL}images/about-bg.png`;
 
   return (
     <section id="about" className="py-24 bg-background">
@@ -14,8 +34,8 @@ export function About() {
           <FadeIn direction="right">
             <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               <img 
-                src={`${import.meta.env.BASE_URL}images/about-bg.png`}
-                alt="About Nawafiz Al-Mustaqbal" 
+                src={image}
+                alt={title} 
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
@@ -26,7 +46,7 @@ export function About() {
                     <Building className="w-6 h-6 text-accent" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg text-foreground">{t("about.title")}</h4>
+                    <h4 className="font-bold text-lg text-foreground">{title}</h4>
                     <p className="text-sm text-muted-foreground">{t("hero.subtitle").substring(0, 50)}...</p>
                   </div>
                 </div>
@@ -38,16 +58,16 @@ export function About() {
           <div>
             <FadeIn delay={0.2}>
               <span className="text-accent font-bold tracking-wider uppercase text-sm mb-2 block">
-                {t("about.badge")}
+                {badge}
               </span>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-                {t("about.title")}
+                {title}
               </h2>
               <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                {t("about.description1")}
+                {desc1}
               </p>
               <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
-                {t("about.description2")}
+                {desc2}
               </p>
             </FadeIn>
 
@@ -55,9 +75,9 @@ export function About() {
               <FadeIn delay={0.4}>
                 <div className="p-6 rounded-2xl bg-secondary/50 border border-secondary hover:border-accent/50 transition-colors">
                   <Target className="w-10 h-10 text-primary mb-4" />
-                  <h3 className="text-xl font-bold text-foreground mb-3">{t("about.vision.title")}</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-3">{visionTitle}</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    {t("about.vision.desc")}
+                    {visionDesc}
                   </p>
                 </div>
               </FadeIn>
@@ -65,9 +85,9 @@ export function About() {
               <FadeIn delay={0.6}>
                 <div className="p-6 rounded-2xl bg-primary text-primary-foreground shadow-xl shadow-primary/20">
                   <Compass className="w-10 h-10 text-accent mb-4" />
-                  <h3 className="text-xl font-bold mb-3">{t("about.mission.title")}</h3>
+                  <h3 className="text-xl font-bold mb-3">{missionTitle}</h3>
                   <p className="text-primary-foreground/80 leading-relaxed">
-                    {t("about.mission.desc")}
+                    {missionDesc}
                   </p>
                 </div>
               </FadeIn>

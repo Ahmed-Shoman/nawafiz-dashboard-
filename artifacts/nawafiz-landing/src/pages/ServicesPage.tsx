@@ -1,4 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useApi, API_BASE_URL } from "@/contexts/ApiContext";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
@@ -9,6 +10,21 @@ import { SERVICES } from "@/lib/servicesData";
 
 export default function ServicesPage() {
   const { lang, dir } = useLanguage();
+  const { services } = useApi();
+
+  const fixImg = (url: string) =>
+    url ? (url.startsWith('http') ? url : `${API_BASE_URL}${url}`) : `${import.meta.env.BASE_URL}images/hero-3.png`;
+
+  // Use API services if available, mapped to the shape the template expects
+  const displayedServices = services?.length > 0 ? services.map((s: any) => ({
+    slug: s.slug,
+    titleAr: s.title_ar,
+    titleEn: s.title_en,
+    shortDescAr: s.short_desc_ar,
+    shortDescEn: s.short_desc_en,
+    image: fixImg(s.image),
+    icon: s.icon || "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+  })) : SERVICES;
 
   return (
     <div className="min-h-screen bg-background">
@@ -42,7 +58,7 @@ export default function ServicesPage() {
       <section className="py-24">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {SERVICES.map((service, idx) => (
+            {displayedServices.map((service: any, idx: number) => (
               <motion.a
                 key={service.slug}
                 href={`/services/${service.slug}`}

@@ -1,6 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const WHATSAPP_NUMBER = "966141234567";
+const WHATSAPP_NUMBER = "0537502035";
 
 export function WhatsAppButton() {
   const { lang } = useLanguage();
