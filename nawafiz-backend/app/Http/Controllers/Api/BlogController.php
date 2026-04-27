@@ -39,11 +39,11 @@ class BlogController extends Controller
     {
         $data = $request->validate([
             'title_ar' => 'required|string',
-            'title_en' => 'required|string',
+            'title_en' => 'nullable|string',
             'excerpt_ar' => 'required|string',
-            'excerpt_en' => 'required|string',
+            'excerpt_en' => 'nullable|string',
             'content_ar' => 'required|string',
-            'content_en' => 'required|string',
+            'content_en' => 'nullable|string',
             'image' => 'nullable|string',
             'publish_date' => 'nullable|date',
             'is_published' => 'nullable|boolean',
@@ -60,7 +60,7 @@ class BlogController extends Controller
         ]);
 
         if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title_en']);
+            $data['slug'] = Str::slug($data['title_ar']);
             $count = Blog::where('slug', $data['slug'])->count();
             if ($count > 0) {
                 $data['slug'] .= '-' . ($count + 1);
@@ -73,6 +73,10 @@ class BlogController extends Controller
                 $data['slug'] .= '-' . ($count + 1);
             }
         }
+
+        $data['title_en'] = $data['title_en'] ?? $data['title_ar'];
+        $data['excerpt_en'] = $data['excerpt_en'] ?? $data['excerpt_ar'];
+        $data['content_en'] = $data['content_en'] ?? $data['content_ar'];
 
         return Blog::create($data);
     }
@@ -98,6 +102,10 @@ class BlogController extends Controller
                 }
             }
         }
+
+        $data['title_en'] = $data['title_en'] ?? $data['title_ar'] ?? $blog->title_ar;
+        $data['excerpt_en'] = $data['excerpt_en'] ?? $data['excerpt_ar'] ?? $blog->excerpt_ar;
+        $data['content_en'] = $data['content_en'] ?? $data['content_ar'] ?? $blog->content_ar;
 
         $blog->update($data);
         return $blog;

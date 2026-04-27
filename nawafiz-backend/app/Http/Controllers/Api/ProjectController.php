@@ -22,22 +22,30 @@ class ProjectController extends Controller
     {
         $data = $request->validate([
             'title_ar' => 'required|string',
-            'title_en' => 'required|string',
+            'title_en' => 'nullable|string',
             'desc_ar' => 'required|string',
-            'desc_en' => 'required|string',
+            'desc_en' => 'nullable|string',
             'image' => 'nullable|string',
             'order' => 'nullable|integer',
             'is_active' => 'nullable|boolean',
         ]);
+        $data['title_en'] = $data['title_en'] ?? $data['title_ar'];
+        $data['desc_en'] = $data['desc_en'] ?? $data['desc_ar'];
+
         return Project::create($data);
     }
 
     public function update(Request $request, int $id)
     {
         $project = Project::findOrFail($id);
-        $project->update($request->only([
+        $data = $request->only([
             'title_ar', 'title_en', 'desc_ar', 'desc_en', 'image', 'order', 'is_active',
-        ]));
+        ]);
+        
+        $data['title_en'] = $data['title_en'] ?? $data['title_ar'] ?? $project->title_ar;
+        $data['desc_en'] = $data['desc_en'] ?? $data['desc_ar'] ?? $project->desc_ar;
+
+        $project->update($data);
         return $project;
     }
 

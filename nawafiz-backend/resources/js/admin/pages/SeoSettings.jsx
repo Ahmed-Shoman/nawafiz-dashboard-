@@ -129,6 +129,7 @@ const SeoSettings = () => {
                             )}
                         </div>
                     ))}
+                </div>
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
                     <h2 className="text-xl font-bold border-b pb-2">ملفات محركات البحث (SEO Files)</h2>
                     <p className="text-sm text-gray-500 mb-4">

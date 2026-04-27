@@ -8,7 +8,7 @@ const ProjectsManager = () => {
     const [formOpen, setFormOpen] = useState(false);
     const [editId, setEditId] = useState(null);
     const [formData, setFormData] = useState({
-        title_ar: '', title_en: '', desc_ar: '', desc_en: '',
+        title_ar: '', desc_ar: '',
         image: '', order: 0, is_active: true
     });
     const [uploading, setUploading] = useState(false);
@@ -65,8 +65,8 @@ const ProjectsManager = () => {
     const handleEdit = (project) => {
         setEditId(project.id);
         setFormData({
-            title_ar: project.title_ar, title_en: project.title_en,
-            desc_ar: project.desc_ar, desc_en: project.desc_en,
+            title_ar: project.title_ar || '',
+            desc_ar: project.desc_ar || '',
             image: project.image || '', order: project.order || 0,
             is_active: project.is_active
         });
@@ -93,7 +93,7 @@ const ProjectsManager = () => {
                     <p className="text-gray-500 mt-1">إضافة وتعديل المشاريع في المعرض.</p>
                 </div>
                 <button 
-                    onClick={() => { setEditId(null); setFormData({ title_ar: '', title_en: '', desc_ar: '', desc_en: '', image: '', order: 0, is_active: true }); setFormOpen(true); }}
+                    onClick={() => { setEditId(null); setFormData({ title_ar: '', desc_ar: '', image: '', order: 0, is_active: true }); setFormOpen(true); }}
                     className="flex items-center gap-2 bg-[#0d2233] text-white px-4 py-2 rounded-lg hover:bg-[#1a3651] transition"
                 >
                     <Plus size={20} />
@@ -111,26 +111,14 @@ const ProjectsManager = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">الاسم (عربي)</label>
-                                <input value={formData.title_ar} onChange={e => setFormData({...formData, title_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">الاسم (إنجليزي)</label>
-                                <input value={formData.title_en} onChange={e => setFormData({...formData, title_en: e.target.value})} required className="w-full px-4 py-2 border rounded-lg" dir="ltr" />
-                            </div>
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">اسم المشروع</label>
+                            <input value={formData.title_ar} onChange={e => setFormData({...formData, title_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg" />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">الوصف (عربي)</label>
-                                <textarea value={formData.desc_ar} onChange={e => setFormData({...formData, desc_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-24" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">الوصف (إنجليزي)</label>
-                                <textarea value={formData.desc_en} onChange={e => setFormData({...formData, desc_en: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-24" dir="ltr" />
-                            </div>
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">الوصف</label>
+                            <textarea value={formData.desc_ar} onChange={e => setFormData({...formData, desc_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-24" />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-gray-50 p-4 rounded-lg">

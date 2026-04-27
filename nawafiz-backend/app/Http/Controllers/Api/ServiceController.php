@@ -30,13 +30,13 @@ class ServiceController extends Controller
     {
         $data = $request->validate([
             'title_ar' => 'required|string',
-            'title_en' => 'required|string',
+            'title_en' => 'nullable|string',
             'short_desc_ar' => 'required|string',
-            'short_desc_en' => 'required|string',
+            'short_desc_en' => 'nullable|string',
             'long_desc_ar' => 'required|string',
-            'long_desc_en' => 'required|string',
-            'features_ar' => 'required|array',
-            'features_en' => 'required|array',
+            'long_desc_en' => 'nullable|string',
+            'features_ar' => 'nullable|array',
+            'features_en' => 'nullable|array',
             'image' => 'nullable|string',
             'icon' => 'nullable|string',
             'order' => 'nullable|integer',
@@ -54,7 +54,7 @@ class ServiceController extends Controller
         ]);
 
         if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title_en']);
+            $data['slug'] = Str::slug($data['title_ar']);
             $count = Service::where('slug', $data['slug'])->count();
             if ($count > 0) {
                 $data['slug'] .= '-' . ($count + 1);
@@ -67,6 +67,11 @@ class ServiceController extends Controller
                 $data['slug'] .= '-' . ($count + 1);
             }
         }
+
+        $data['title_en'] = $data['title_en'] ?? $data['title_ar'];
+        $data['short_desc_en'] = $data['short_desc_en'] ?? $data['short_desc_ar'];
+        $data['long_desc_en'] = $data['long_desc_en'] ?? $data['long_desc_ar'];
+        $data['features_en'] = $data['features_en'] ?? $data['features_ar'] ?? [];
 
         return Service::create($data);
     }
@@ -92,6 +97,11 @@ class ServiceController extends Controller
                 }
             }
         }
+
+        $data['title_en'] = $data['title_en'] ?? $data['title_ar'] ?? $service->title_ar;
+        $data['short_desc_en'] = $data['short_desc_en'] ?? $data['short_desc_ar'] ?? $service->short_desc_ar;
+        $data['long_desc_en'] = $data['long_desc_en'] ?? $data['long_desc_ar'] ?? $service->long_desc_ar;
+        $data['features_en'] = $data['features_en'] ?? $data['features_ar'] ?? $service->features_ar ?? [];
 
         $service->update($data);
         return $service;

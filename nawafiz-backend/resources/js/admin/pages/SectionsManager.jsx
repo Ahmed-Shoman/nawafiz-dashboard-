@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Save, Image as ImageIcon } from 'lucide-react';
 import { useParams } from 'react-router-dom';
+import RichTextEditor from '../components/RichTextEditor';
+
 
 const SectionsManager = () => {
     const { key } = useParams();
@@ -89,23 +91,23 @@ const SectionsManager = () => {
         <div className="mb-4">
             <label className="block text-sm font-semibold text-gray-700 mb-2">{label}</label>
             {isTextarea ? (
-                <textarea 
-                    value={content[fieldKey] || ''} 
-                    onChange={e => handleChange(fieldKey, e.target.value)} 
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 outline-none h-24"
+                <RichTextEditor
+                    value={content[fieldKey] || ''}
+                    onChange={val => handleChange(fieldKey, val)}
                     dir={useLtr ? 'ltr' : 'auto'}
                 />
             ) : (
-                <input 
+                <input
                     type="text"
-                    value={content[fieldKey] || ''} 
-                    onChange={e => handleChange(fieldKey, e.target.value)} 
+                    value={content[fieldKey] || ''}
+                    onChange={e => handleChange(fieldKey, e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 outline-none"
                     dir={useLtr ? 'ltr' : 'auto'}
                 />
             )}
         </div>
     );
+
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
@@ -128,12 +130,9 @@ const SectionsManager = () => {
                 {key === 'hero' && (
                     <>
                         <h2 className="text-xl font-bold border-b pb-2 mb-4">النصوص العامة</h2>
-                        {renderInput('النص الفرعي (عربي)', 'subtitle_ar', true)}
-                        {renderInput('النص الفرعي (إنجليزي)', 'subtitle_en', true, true)}
-                        {renderInput('زر 1 (عربي)', 'cta_more_ar')}
-                        {renderInput('زر 1 (إنجليزي)', 'cta_more_en')}
-                        {renderInput('زر 2 (عربي)', 'cta_projects_ar')}
-                        {renderInput('زر 2 (إنجليزي)', 'cta_projects_en')}
+                        {renderInput('النص الفرعي', 'subtitle_ar', true)}
+                        {renderInput('زر 1', 'cta_more_ar')}
+                        {renderInput('زر 2', 'cta_projects_ar')}
 
                         <h2 className="text-xl font-bold border-b pb-2 mt-8 mb-4">الشرائح (Slides)</h2>
                         {content.slides?.map((slide, idx) => (
@@ -166,36 +165,21 @@ const SectionsManager = () => {
 
                 {key === 'about' && (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {renderInput('شارة القسم (عربي)', 'badge_ar')}
-                            {renderInput('شارة القسم (إنجليزي)', 'badge_en', false, true)}
-                            {renderInput('العنوان الرئيسي (عربي)', 'title_ar')}
-                            {renderInput('العنوان الرئيسي (إنجليزي)', 'title_en', false, true)}
+                        <div className="grid grid-cols-1 gap-4">
+                            {renderInput('شارة القسم', 'badge_ar')}
+                            {renderInput('العنوان الرئيسي', 'title_ar')}
                         </div>
-                        {renderInput('وصف 1 (عربي)', 'desc1_ar', true)}
-                        {renderInput('وصف 1 (إنجليزي)', 'desc1_en', true, true)}
-                        {renderInput('وصف 2 (عربي)', 'desc2_ar', true)}
-                        {renderInput('وصف 2 (إنجليزي)', 'desc2_en', true, true)}
-                        
+                        {renderInput('وصف 1', 'desc1_ar', true)}
+                        {renderInput('وصف 2', 'desc2_ar', true)}
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                             <div className="bg-gray-50 p-4 rounded-lg">
-                                {renderInput('عنوان الرؤية (عربي)', 'vision_title_ar')}
-                                {renderInput('وصف الرؤية (عربي)', 'vision_desc_ar', true)}
+                                {renderInput('عنوان الرؤية', 'vision_title_ar')}
+                                {renderInput('وصف الرؤية', 'vision_desc_ar', true)}
                             </div>
                             <div className="bg-gray-50 p-4 rounded-lg">
-                                {renderInput('عنوان الرؤية (إنجليزي)', 'vision_title_en', false, true)}
-                                {renderInput('وصف الرؤية (إنجليزي)', 'vision_desc_en', true, true)}
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                {renderInput('عنوان المهمة (عربي)', 'mission_title_ar')}
-                                {renderInput('وصف المهمة (عربي)', 'mission_desc_ar', true)}
-                            </div>
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                {renderInput('عنوان المهمة (إنجليزي)', 'mission_title_en', false, true)}
-                                {renderInput('وصف المهمة (إنجليزي)', 'mission_desc_en', true, true)}
+                                {renderInput('عنوان المهمة', 'mission_title_ar')}
+                                {renderInput('وصف المهمة', 'mission_desc_ar', true)}
                             </div>
                         </div>
 
@@ -214,10 +198,8 @@ const SectionsManager = () => {
 
                 {key === 'stats' && (
                     <>
-                        {renderInput('العنوان (عربي)', 'title_ar')}
-                        {renderInput('العنوان (إنجليزي)', 'title_en', false, true)}
-                        {renderInput('الوصف (عربي)', 'subtitle_ar', true)}
-                        {renderInput('الوصف (إنجليزي)', 'subtitle_en', true, true)}
+                        {renderInput('العنوان', 'title_ar')}
+                        {renderInput('الوصف', 'subtitle_ar', true)}
 
                         <h2 className="text-xl font-bold border-b pb-2 mt-8 mb-4">عناصر الإحصائيات</h2>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -251,10 +233,8 @@ const SectionsManager = () => {
                 
                 {key === 'footer' && (
                     <>
-                        {renderInput('وصف التذييل (عربي)', 'desc_ar', true)}
-                        {renderInput('وصف التذييل (إنجليزي)', 'desc_en', true, true)}
-                        {renderInput('حقوق الملكية (عربي)', 'rights_ar')}
-                        {renderInput('حقوق الملكية (إنجليزي)', 'rights_en', false, true)}
+                        {renderInput('وصف التذييل', 'desc_ar', true)}
+                        {renderInput('حقوق الملكية', 'rights_ar')}
 
                         <h2 className="text-xl font-bold border-b pb-2 mt-8 mb-4">روابط سوشل ميديا</h2>
                         {content.social_links?.map((link, idx) => (

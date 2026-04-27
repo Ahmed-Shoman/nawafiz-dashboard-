@@ -1,32 +1,84 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Plus, Edit2, Trash2, X, Image as ImageIcon } from 'lucide-react';
 
-// Lazy-load ReactQuill to prevent crashes if the module fails
-let ReactQuill = null;
-// try {
-//     ReactQuill = React.lazy(() => import('react-quill'));
-// } catch (e) {
-//     console.warn('ReactQuill failed to load, using textarea fallback');
-// }
-
-// Simple fallback rich-text editor
-const FallbackEditor = ({ value, onChange, dir }) => (
-    <textarea
-        value={value || ''}
-        onChange={e => onChange(e.target.value)}
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 outline-none min-h-[200px] font-sans"
-        dir={dir || 'auto'}
-    />
-);
-
-// Wrapper that tries ReactQuill, falls back to textarea
+// Rich Text Editor using Quill directly (compatible with React 19)
 const RichTextEditor = ({ value, onChange, dir }) => {
-    if (!ReactQuill) return <FallbackEditor value={value} onChange={onChange} dir={dir} />;
+    const containerRef = useRef(null);
+    const quillRef = useRef(null);
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
+
+    useEffect(() => {
+        // Dynamically import quill to keep bundle lean
+        import('quill').then(({ default: Quill }) => {
+            // Import quill CSS once
+            if (!document.querySelector('link[data-quill-css]')) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css';
+                link.setAttribute('data-quill-css', '1');
+                document.head.appendChild(link);
+            }
+
+            if (containerRef.current && !quillRef.current) {
+                const editorDiv = document.createElement('div');
+                containerRef.current.appendChild(editorDiv);
+
+                quillRef.current = new Quill(editorDiv, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ header: [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ list: 'ordered' }, { list: 'bullet' }],
+                            [{ align: [] }],
+                            [{ direction: 'rtl' }],
+                            ['link'],
+                            ['clean'],
+                        ],
+                    },
+                });
+
+                // Set initial value
+                if (value) {
+                    quillRef.current.root.innerHTML = value;
+                }
+
+                // Set direction
+                if (dir) {
+                    quillRef.current.root.setAttribute('dir', dir);
+                }
+
+                quillRef.current.on('text-change', () => {
+                    const html = quillRef.current.root.innerHTML;
+                    onChangeRef.current(html === '<p><br></p>' ? '' : html);
+                });
+            }
+        });
+
+        return () => {
+            quillRef.current = null;
+        };
+    }, []);
+
+    // Sync value from outside only if different
+    useEffect(() => {
+        if (quillRef.current) {
+            const current = quillRef.current.root.innerHTML;
+            const incoming = value || '';
+            if (current !== incoming && incoming !== '') {
+                quillRef.current.root.innerHTML = incoming;
+            }
+        }
+    }, [value]);
+
     return (
-        <Suspense fallback={<FallbackEditor value={value} onChange={onChange} dir={dir} />}>
-            <ReactQuill theme="snow" value={value || ''} onChange={onChange} className="bg-white" />
-        </Suspense>
+        <div
+            ref={containerRef}
+            className="border border-gray-300 rounded-lg bg-white"
+            style={{ minHeight: '200px' }}
+        />
     );
 };
 
@@ -36,8 +88,8 @@ const BlogsManager = () => {
     const [formOpen, setFormOpen] = useState(false);
     const [editId, setEditId] = useState(null);
     const emptyForm = {
-        title_ar: '', title_en: '', excerpt_ar: '', excerpt_en: '',
-        content_ar: '', content_en: '', image: '', publish_date: '', is_published: false,
+        title_ar: '', excerpt_ar: '',
+        content_ar: '', image: '', publish_date: '', is_published: false,
         slug: '', meta_title: '', meta_description: '', keywords: '', img_alt: '',
         canonical_url: '', tags: '', og_title: '', og_description: '', schema_markup: ''
     };
@@ -75,7 +127,7 @@ const BlogsManager = () => {
         const formDataUpload = new FormData();
         formDataUpload.append('file', file);
         formDataUpload.append('folder', 'blogs');
-        
+
         setUploading(true);
         try {
             const { data } = await axios.post('/api/admin/upload', formDataUpload);
@@ -97,7 +149,7 @@ const BlogsManager = () => {
             }
             setFormOpen(false);
             setEditId(null);
-            setFormData({...emptyForm});
+            setFormData({ ...emptyForm });
             setActiveTab('basic');
             fetchBlogs();
         } catch (err) {
@@ -109,9 +161,9 @@ const BlogsManager = () => {
     const handleEdit = (blog) => {
         setEditId(blog.id);
         setFormData({
-            title_ar: blog.title_ar, title_en: blog.title_en,
-            excerpt_ar: blog.excerpt_ar, excerpt_en: blog.excerpt_en,
-            content_ar: blog.content_ar || '', content_en: blog.content_en || '',
+            title_ar: blog.title_ar || '',
+            excerpt_ar: blog.excerpt_ar || '',
+            content_ar: blog.content_ar || '',
             image: blog.image || '', publish_date: blog.publish_date || '',
             is_published: blog.is_published,
             slug: blog.slug || '', meta_title: blog.meta_title || '',
@@ -153,7 +205,7 @@ const BlogsManager = () => {
                     <h1 className="text-2xl font-bold text-gray-900">المدونات والمقالات</h1>
                     <p className="text-gray-500 mt-1">إضافة وتعديل مقالات المدونة.</p>
                 </div>
-                <button 
+                <button
                     onClick={openNewForm}
                     className="flex items-center gap-2 bg-[#0d2233] text-white px-4 py-2 rounded-lg hover:bg-[#1a3651] transition"
                 >
@@ -179,108 +231,91 @@ const BlogsManager = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {activeTab === 'basic' ? (
                             <>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">العنوان (عربي) *</label>
-                                <input value={formData.title_ar} onChange={e => setFormData({...formData, title_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">العنوان (إنجليزي) *</label>
-                                <input value={formData.title_en} onChange={e => setFormData({...formData, title_en: e.target.value})} required className="w-full px-4 py-2 border rounded-lg" dir="ltr" />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">مقتطف (عربي) *</label>
-                                <textarea value={formData.excerpt_ar} onChange={e => setFormData({...formData, excerpt_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-24" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">مقتطف (إنجليزي) *</label>
-                                <textarea value={formData.excerpt_en} onChange={e => setFormData({...formData, excerpt_en: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-24" dir="ltr" />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">المحتوى كاملاً (عربي) *</label>
-                            <RichTextEditor value={formData.content_ar} onChange={val => setFormData({...formData, content_ar: val})} />
-                        </div>
-
-                        <div dir="ltr">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2 text-right">المحتوى كاملاً (إنجليزي) *</label>
-                            <RichTextEditor value={formData.content_en} onChange={val => setFormData({...formData, content_en: val})} dir="ltr" />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">تاريخ النشر</label>
-                                <input type="date" value={formData.publish_date} onChange={e => setFormData({...formData, publish_date: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">صورة المقال</label>
-                                <div className="flex items-center gap-4">
-                                    <label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200">
-                                        <ImageIcon size={20} />
-                                        {uploading ? 'جاري الرفع...' : 'اختر صورة'}
-                                        <input type="file" className="hidden" accept="image/*" onChange={handleUpload} />
-                                    </label>
-                                    {formData.image && <img src={formData.image} alt="Preview" className="h-10 w-16 object-cover rounded" />}
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">عنوان المقال *</label>
+                                    <input value={formData.title_ar} onChange={e => setFormData({ ...formData, title_ar: e.target.value })} required className="w-full px-4 py-2 border rounded-lg" />
                                 </div>
-                            </div>
-                            <div className="flex items-center gap-2 h-10">
-                                <input type="checkbox" id="published" checked={formData.is_published} onChange={e => setFormData({...formData, is_published: e.target.checked})} className="w-5 h-5" />
-                                <label htmlFor="published" className="text-sm font-semibold text-gray-700">حالة النشر (مرئي للزوار)</label>
-                            </div>
-                            </div>
+
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">مقتطف المقال *</label>
+                                    <textarea value={formData.excerpt_ar} onChange={e => setFormData({ ...formData, excerpt_ar: e.target.value })} required className="w-full px-4 py-2 border rounded-lg h-24" />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">المحتوى كاملاً *</label>
+                                    <RichTextEditor value={formData.content_ar} onChange={val => setFormData({ ...formData, content_ar: val })} />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2">تاريخ النشر</label>
+                                        <input type="date" value={formData.publish_date} onChange={e => setFormData({ ...formData, publish_date: e.target.value })} className="w-full px-4 py-2 border rounded-lg" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-gray-700 mb-2">صورة المقال</label>
+                                        <div className="flex items-center gap-4">
+                                            <label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200">
+                                                <ImageIcon size={20} />
+                                                {uploading ? 'جاري الرفع...' : 'اختر صورة'}
+                                                <input type="file" className="hidden" accept="image/*" onChange={handleUpload} />
+                                            </label>
+                                            {formData.image && <img src={formData.image} alt="Preview" className="h-10 w-16 object-cover rounded" />}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 h-10">
+                                        <input type="checkbox" id="published" checked={formData.is_published} onChange={e => setFormData({ ...formData, is_published: e.target.checked })} className="w-5 h-5" />
+                                        <label htmlFor="published" className="text-sm font-semibold text-gray-700">حالة النشر (مرئي للزوار)</label>
+                                    </div>
+                                </div>
                             </>
                         ) : (
                             <div className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">رابط المقال (Slug)</label>
-                                        <input value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full px-4 py-2 border rounded-lg" dir="ltr" placeholder="يُترك فارغاً للتوليد التلقائي" />
+                                        <input value={formData.slug} onChange={e => setFormData({ ...formData, slug: e.target.value })} className="w-full px-4 py-2 border rounded-lg" dir="ltr" placeholder="يُترك فارغاً للتوليد التلقائي" />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">Canonical URL</label>
-                                        <input value={formData.canonical_url} onChange={e => setFormData({...formData, canonical_url: e.target.value})} className="w-full px-4 py-2 border rounded-lg" dir="ltr" />
+                                        <input value={formData.canonical_url} onChange={e => setFormData({ ...formData, canonical_url: e.target.value })} className="w-full px-4 py-2 border rounded-lg" dir="ltr" />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">عنوان الميتا (Meta Title)</label>
-                                        <input value={formData.meta_title} onChange={e => setFormData({...formData, meta_title: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+                                        <input value={formData.meta_title} onChange={e => setFormData({ ...formData, meta_title: e.target.value })} className="w-full px-4 py-2 border rounded-lg" />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">الكلمات المفتاحية (Keywords)</label>
-                                        <input value={formData.keywords} onChange={e => setFormData({...formData, keywords: e.target.value})} className="w-full px-4 py-2 border rounded-lg" placeholder="كلمة, أخرى, ..." />
+                                        <input value={formData.keywords} onChange={e => setFormData({ ...formData, keywords: e.target.value })} className="w-full px-4 py-2 border rounded-lg" placeholder="كلمة, أخرى, ..." />
                                     </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">وصف الميتا (Meta Description)</label>
-                                    <textarea value={formData.meta_description} onChange={e => setFormData({...formData, meta_description: e.target.value})} className="w-full px-4 py-2 border rounded-lg h-20" />
+                                    <textarea value={formData.meta_description} onChange={e => setFormData({ ...formData, meta_description: e.target.value })} className="w-full px-4 py-2 border rounded-lg h-20" />
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">عنوان Open Graph (للسوشيال ميديا)</label>
-                                        <input value={formData.og_title} onChange={e => setFormData({...formData, og_title: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+                                        <input value={formData.og_title} onChange={e => setFormData({ ...formData, og_title: e.target.value })} className="w-full px-4 py-2 border rounded-lg" />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">وصف بديل للصور (Alt Text)</label>
-                                        <input value={formData.img_alt} onChange={e => setFormData({...formData, img_alt: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+                                        <input value={formData.img_alt} onChange={e => setFormData({ ...formData, img_alt: e.target.value })} className="w-full px-4 py-2 border rounded-lg" />
                                     </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">وصف Open Graph</label>
-                                    <textarea value={formData.og_description} onChange={e => setFormData({...formData, og_description: e.target.value})} className="w-full px-4 py-2 border rounded-lg h-20" />
+                                    <textarea value={formData.og_description} onChange={e => setFormData({ ...formData, og_description: e.target.value })} className="w-full px-4 py-2 border rounded-lg h-20" />
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="md:col-span-1">
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">الوسوم (Tags)</label>
-                                        <input value={formData.tags} onChange={e => setFormData({...formData, tags: e.target.value})} className="w-full px-4 py-2 border rounded-lg" placeholder="tag1, tag2" />
+                                        <input value={formData.tags} onChange={e => setFormData({ ...formData, tags: e.target.value })} className="w-full px-4 py-2 border rounded-lg" placeholder="tag1, tag2" />
                                     </div>
                                     <div className="md:col-span-1">
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">كود Schema Markup (JSON-LD)</label>
-                                        <textarea value={formData.schema_markup} onChange={e => setFormData({...formData, schema_markup: e.target.value})} className="w-full px-4 py-2 border rounded-lg h-32" dir="ltr" placeholder="{ ... }" />
+                                        <textarea value={formData.schema_markup} onChange={e => setFormData({ ...formData, schema_markup: e.target.value })} className="w-full px-4 py-2 border rounded-lg h-32" dir="ltr" placeholder="{ ... }" />
                                     </div>
                                 </div>
                             </div>

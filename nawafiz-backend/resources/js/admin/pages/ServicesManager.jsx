@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Plus, Edit2, Trash2, X, Image as ImageIcon } from 'lucide-react';
+import RichTextEditor from '../components/RichTextEditor';
+
 
 const ServicesManager = () => {
     const [services, setServices] = useState([]);
@@ -8,8 +10,8 @@ const ServicesManager = () => {
     const [formOpen, setFormOpen] = useState(false);
     const [editId, setEditId] = useState(null);
     const emptyForm = {
-        title_ar: '', title_en: '', short_desc_ar: '', short_desc_en: '',
-        long_desc_ar: '', long_desc_en: '', features_ar: '', features_en: '',
+        title_ar: '', short_desc_ar: '',
+        long_desc_ar: '', features_ar: '',
         image: '', icon: '', order: 0, is_active: true,
         slug: '', meta_title: '', meta_description: '', keywords: '', img_alt: '',
         canonical_url: '', tags: '', og_title: '', og_description: '', schema_markup: ''
@@ -57,7 +59,6 @@ const ServicesManager = () => {
             const payload = {
                 ...formData,
                 features_ar: formData.features_ar.split('\n').filter(Boolean),
-                features_en: formData.features_en.split('\n').filter(Boolean),
             };
 
             if (editId) {
@@ -76,11 +77,10 @@ const ServicesManager = () => {
     const handleEdit = (service) => {
         setEditId(service.id);
         setFormData({
-            title_ar: service.title_ar, title_en: service.title_en,
-            short_desc_ar: service.short_desc_ar, short_desc_en: service.short_desc_en,
-            long_desc_ar: service.long_desc_ar, long_desc_en: service.long_desc_en,
+            title_ar: service.title_ar || '',
+            short_desc_ar: service.short_desc_ar || '',
+            long_desc_ar: service.long_desc_ar || '',
             features_ar: (service.features_ar || []).join('\n'),
-            features_en: (service.features_en || []).join('\n'),
             image: service.image || '', icon: service.icon || '',
             order: service.order || 0, is_active: service.is_active,
             slug: service.slug || '', meta_title: service.meta_title || '',
@@ -138,49 +138,25 @@ const ServicesManager = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {activeTab === 'basic' ? (
                             <>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">العنوان (عربي)</label>
-                                <input value={formData.title_ar} onChange={e => setFormData({...formData, title_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">العنوان (إنجليزي)</label>
-                                <input value={formData.title_en} onChange={e => setFormData({...formData, title_en: e.target.value})} required className="w-full px-4 py-2 border rounded-lg" dir="ltr" />
-                            </div>
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">عنوان الخدمة</label>
+                                    <input value={formData.title_ar} onChange={e => setFormData({...formData, title_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg" />
+                                </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">وصف قصير (عربي)</label>
-                                <textarea value={formData.short_desc_ar} onChange={e => setFormData({...formData, short_desc_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-20" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">وصف قصير (إنجليزي)</label>
-                                <textarea value={formData.short_desc_en} onChange={e => setFormData({...formData, short_desc_en: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-20" dir="ltr" />
-                            </div>
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">وصف قصير</label>
+                                    <textarea value={formData.short_desc_ar} onChange={e => setFormData({...formData, short_desc_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-20" />
+                                </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">كيفية تقديم الخدمة / وصف طويل (عربي)</label>
-                                <textarea value={formData.long_desc_ar} onChange={e => setFormData({...formData, long_desc_ar: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-32" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">كيفية تقديم الخدمة / وصف طويل (إنجليزي)</label>
-                                <textarea value={formData.long_desc_en} onChange={e => setFormData({...formData, long_desc_en: e.target.value})} required className="w-full px-4 py-2 border rounded-lg h-32" dir="ltr" />
-                            </div>
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">وصف طويل</label>
+                                    <RichTextEditor value={formData.long_desc_ar} onChange={val => setFormData({...formData, long_desc_ar: val})} />
+                                </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">المميزات (عربي) - كل ميزة في سطر منفصل</label>
-                                <textarea value={formData.features_ar} onChange={e => setFormData({...formData, features_ar: e.target.value})} className="w-full px-4 py-2 border rounded-lg h-32" placeholder="ميزة 1&#10;ميزة 2..." />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">المميزات (إنجليزي) - كل ميزة في سطر منفصل</label>
-                                <textarea value={formData.features_en} onChange={e => setFormData({...formData, features_en: e.target.value})} className="w-full px-4 py-2 border rounded-lg h-32" dir="ltr" placeholder="Feature 1&#10;Feature 2..." />
-                            </div>
-                        </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">المميزات - كل ميزة في سطر منفصل</label>
+                                    <textarea value={formData.features_ar} onChange={e => setFormData({...formData, features_ar: e.target.value})} className="w-full px-4 py-2 border rounded-lg h-32" placeholder="ميزة 1&#10;ميزة 2..." />
+                                </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center bg-gray-50 p-4 rounded-lg">
                              <div>
